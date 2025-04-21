@@ -3,9 +3,7 @@ import { Form, Button, Row, Col, Card, ProgressBar, Badge } from "react-bootstra
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 import Select from 'react-select';
-import ExactMatchMultiSelect from './ExactMatchMultiSelect';
-import TagBasedMultiSelect from './TagBasedMultiSelect';
-import BootstrapStyleMultiSelect from './BootstrapStyleMultiSelect';
+import ExpandedChapterDropdown from './ExpandedChapterDropdown';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSchool,
@@ -36,6 +34,7 @@ import { useTutorial } from "../contexts/TutorialContext";
 import Tutorial from "./Tutorial";
 import QuestionListModal from "./QuestionListModal";
 import "./StudentDash.css";
+import "./ExpandedChapterDropdown.css"; // Import the CSS for the new dropdown
 
 function StudentDash() {
   const navigate = useNavigate();
@@ -496,117 +495,76 @@ function StudentDash() {
                     </Form.Group>
                   </Col>
                 </Row>
+                // This is the modified section from StudentDash.jsx
+// Replace the chapter dropdown section with this code
 
-                <Row>
-                  <Col md={6} className="mb-3">
-                    <Form.Group controlId="formChapters">
-                      <Form.Label>
-                        <FontAwesomeIcon icon={faListAlt} className="me-2" />
-                        Chapters
-                      </Form.Label>
-                      {questionType === "external" ? (
-                        // Single select for "Set of Questions" type
-                        <Form.Select
-                          value={selectedChapters.length > 0 ? selectedChapters[0] : ''}
-                          onChange={(e) => setSelectedChapters([e.target.value])}
-                          className="form-select-enhanced"
-                          disabled={!selectedSubject}
-                          style={{ maxHeight: '300px', overflow: 'auto' }}
-                        >
-                          <option value="">Select Chapter</option>
-                          {chapters.map((chapter) => (
-                            <option key={chapter.topic_code} value={chapter.topic_code}>
-                              {chapter.name}
-                            </option>
-                          ))}
-                        </Form.Select>
-                      ) : (
-                        // Multi-select using react-select for other question types
-                        <Select
-                          isMulti
-                          options={chapters.map((chapter) => ({
-                            value: chapter.topic_code,
-                            label: chapter.name,
-                          }))}
-                          value={selectedChapters.map((code) => ({
-                            value: code,
-                            label: chapters.find((chapter) => chapter.topic_code === code)?.name
-                          }))}
-                          onChange={(selectedOptions) => {
-                            setSelectedChapters(selectedOptions ? selectedOptions.map(option => option.value) : []);
-                          }}
-                          isDisabled={!selectedSubject}
-                          placeholder="Select Chapters"
-                          classNamePrefix="react-select"
-                          className="chapter-select"
-                          styles={{
-                            // Add these styles to ensure dropdown shows all options with scrolling
-                            menu: (provided) => ({
-                              ...provided,
-                              maxHeight: '300px', // Increased height for dropdown
-                            }),
-                            menuList: (provided) => ({
-                              ...provided,
-                              maxHeight: '300px', // Increased height for dropdown content
-                            }),
-                          }}
-                        />
-                      )}
-                    </Form.Group>
-                  </Col>
-                  <Col md={6} className="mb-3">
-                    <Form.Group controlId="formQuestionType">
-                      <Form.Label>
-                        <FontAwesomeIcon
-                          icon={faClipboardQuestion}
-                          className="me-2"
-                        />
-                        Question Type
-                      </Form.Label>
-                      <Form.Select
-                        value={questionType}
-                        onChange={(e) => setQuestionType(e.target.value)}
-                        disabled={selectedChapters.length === 0}
-                        className="form-select-enhanced"
-                      >
-                        <option value="">Select Question Type</option>
-                        <option value="solved">Solved</option>
-                        <option value="exercise">Exercise</option>
-                        <option value="external">Set of Questions</option>
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-                </Row>
+<Row>
+  <Col md={6} className="mb-3 chapter-dropdown" style={{ position: 'relative', zIndex: 9999 }}>
+    {/* Replace the old chapters selection with our new ExpandedChapterDropdown component with higher z-index */}
+    <ExpandedChapterDropdown
+      chapters={chapters}
+      selectedChapters={selectedChapters}
+      setSelectedChapters={setSelectedChapters}
+      disabled={!selectedSubject}
+      questionType={questionType}
+    />
+  </Col>
+  <Col md={6} className="mb-3">
+    <Form.Group controlId="formQuestionType">
+      <Form.Label>
+        <FontAwesomeIcon
+          icon={faClipboardQuestion}
+          className="me-2"
+        />
+        Question Type
+      </Form.Label>
+      <Form.Select
+        value={questionType}
+        onChange={(e) => setQuestionType(e.target.value)}
+        disabled={selectedChapters.length === 0}
+        className="form-select-enhanced"
+      >
+        <option value="">Select Question Type</option>
+        <option value="solved">Solved</option>
+        <option value="exercise">Exercise</option>
+        <option value="external">Set of Questions</option>
+      </Form.Select>
+    </Form.Group>
+  </Col>
+</Row>
 
-                {questionType === "external" && (
-                  <Row>
-                    <Col md={6} className="mb-3">
-                      <Form.Group controlId="formQuestionLevel">
-                        <Form.Label>
-                          <FontAwesomeIcon
-                            icon={faClipboardQuestion}
-                            className="me-2"
-                          />
-                          Select The Set
-                        </Form.Label>
-                        <Form.Select
-                          value={questionLevel}
-                          onChange={(e) => setQuestionLevel(e.target.value)}
-                          className="form-select-enhanced"
-                        >
-                          <option value="">Select The Set</option>
-                          {subTopics.map((subTopic, index) => (
-                            <option key={subTopic} value={subTopic}>
-                              {`Exercise ${index + 1}`}
-                            </option>
-                          ))}
-                        </Form.Select>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                )}
+{/* Add a larger gap to prevent content overlap if dropdown expands */}
+<div style={{ height: '30px', clear: 'both' }}></div>
 
-                <div className="d-flex justify-content-center mt-3">
+{questionType === "external" && (
+  <Row>
+    <Col md={6} className="mb-3">
+      <Form.Group controlId="formQuestionLevel">
+        <Form.Label>
+          <FontAwesomeIcon
+            icon={faClipboardQuestion}
+            className="me-2"
+          />
+          Select The Set
+        </Form.Label>
+        <Form.Select
+          value={questionLevel}
+          onChange={(e) => setQuestionLevel(e.target.value)}
+          className="form-select-enhanced"
+        >
+          <option value="">Select The Set</option>
+          {subTopics.map((subTopic, index) => (
+            <option key={subTopic} value={subTopic}>
+              {`Exercise ${index + 1}`}
+            </option>
+          ))}
+        </Form.Select>
+      </Form.Group>
+    </Col>
+  </Row>
+)}
+
+                <div className="d-flex justify-content-center mt-4">
                   <Button
                     variant="primary"
                     type="submit"
@@ -620,6 +578,9 @@ function StudentDash() {
               </Form>
             </Card.Body>
           </Card>
+
+          {/* Add a section separator to ensure proper spacing */}
+          <div className="section-separator"></div>
 
           {/* Learning Progress Overview Section */}
           <Card className={`progress-overview-section ${animateCards ? 'animate-card' : ''}`} style={{'--animation-order': 2}}>

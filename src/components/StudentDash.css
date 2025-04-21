@@ -11,12 +11,8 @@
 
 /* Card Styling */
 .card {
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin-bottom: 20px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .card:hover {
@@ -1097,4 +1093,322 @@
 .scroll-to-top.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Add these styles to your StudentDash.css file */
+
+/* Fix for chapter dropdown positioning and z-index */
+.chapter-dropdown {
+  position: relative;
+  z-index: 1050 !important; /* Ensures dropdown appears above other elements */
+}
+
+/* Make the chapter dropdown appear above other elements */
+.chapter-select .css-26l3qy-menu,
+.react-select__menu {
+  z-index: 1060 !important; /* Higher than most elements but lower than modals */
+}
+
+/* Style for the dropdown container to make it more visible */
+.react-select__menu-list,
+.multiselect-dropdown {
+  background-color: white !important;
+  border: 1px solid #ccdbe8 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Set proper positioning for the dropdown to appear above other content */
+.form-select-enhanced,
+.react-select__control {
+  position: relative;
+}
+
+/* Ensure dropdown opens in correct position */
+.chapter-multi-select .dropdown-menu,
+.react-select__menu {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  width: 100% !important;
+}
+
+/* Fix for chapter list items to make them more readable */
+.chapter-option,
+.dropdown-item,
+.react-select__option {
+  padding: 8px 12px !important;
+  white-space: normal !important; /* Allow text to wrap */
+  word-break: break-word !important;
+}
+
+.chapter-option {
+  padding: 12px 15px !important;
+  white-space: normal !important; /* Allow text wrapping */
+  word-break: break-word !important; /* Break long words if needed */
+}
+
+/* Make sure the dropdown doesn't shift layout when opening */
+.expanded-chapter-dropdown-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 1rem;
+  z-index: 1050;
+}
+
+/* Add improved styling for form elements */
+.form-control:focus, 
+.form-select:focus,
+.custom-select-control:focus,
+.custom-select-control.open {
+  box-shadow: 0 0 0 0.25rem rgba(0, 196, 214, 0.25) !important;
+  border-color: #00c4d6 !important;
+}
+
+/* Ensure all form elements have consistent styling */
+.form-select-enhanced,
+.custom-select-control {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 55px; /* Increased height for better visibility */
+  padding: 10px 15px;
+  background-color: #fff;
+  border: 1px solid #ccdbe8;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.05rem;
+}
+
+/* Add proper hover effects */
+.form-select-enhanced:hover,
+.custom-select-control:hover {
+  border-color: #00c4d6 !important;
+}
+
+/* Fix any modal z-index issues */
+.modal {
+  z-index: 1070 !important; /* Higher than dropdowns */
+}
+
+.modal-backdrop {
+  z-index: 1065 !important; /* Between dropdowns and modal */
+}
+
+/* Ensure error messages appear above other content */
+.alert {
+  z-index: 1055 !important;
+  position: relative;
+}
+
+/* Fix for z-index overlap with Learning Progress Overview */
+.progress-overview-section {
+  z-index: 1 !important; /* Lower z-index than dropdown */
+  margin-top: 20px !important; /* Add more space between sections */
+}
+
+/* Make select/dropdown container have higher z-index */
+.chapter-multi-select,
+.form-group,
+.react-select__container,
+.chapter-multiselect-container,
+.exact-match-multiselect,
+.bootstrap-style-multiselect {
+  position: relative !important;
+  z-index: 1040 !important; /* Higher than page elements but lower than modals */
+}
+
+/* Fix for modal select dropdown appearing behind modal */
+.modal-content .chapter-select .css-26l3qy-menu {
+  z-index: 1060 !important;
+}
+
+/* Add these CSS fixes to your StudentDash.css file */
+
+/* Fix for chapter dropdown positioning and z-index */
+.chapter-dropdown {
+  position: relative;
+}
+
+/* Ensure proper dropdown menu visibility */
+.chapter-select .css-26l3qy-menu,
+.react-select__menu {
+  z-index: 1050 !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  background-color: white !important;
+  border: 1px solid #ccdbe8 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Make sure dropdown container has proper z-index */
+.chapter-select-container {
+  position: relative;
+  z-index: 1040;
+}
+
+/* Style for the dropdown items for better readability */
+.react-select__option {
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+
+/* Fix for z-index overlap with Learning Progress Overview */
+.progress-overview-section {
+  z-index: 1 !important; /* Lower z-index than dropdown */
+  margin-top: 30px !important; /* Add more space between sections */
+}
+
+/* Section separator for better spacing */
+.section-separator {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0, 196, 214, 0.2), transparent);
+  margin: 20px 0 30px 0;
+  clear: both;
+}
+
+/* Ensure proper spacing between form sections */
+.student-dash-container .card {
+  margin-bottom: 30px;
+}
+
+.css-26l3qy-menu,
+.react-select__menu-list {
+  max-height: 300px !important;
+  overflow-y: auto !important;
+}
+
+/* Custom scrollbar for dropdowns */
+.react-select__menu-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.react-select__menu-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.react-select__menu-list::-webkit-scrollbar-thumb {
+  background: #ccdbe8;
+  border-radius: 10px;
+}
+
+.react-select__menu-list::-webkit-scrollbar-thumb:hover {
+  background: #00c4d6;
+}
+
+/* Add these styles to your CSS file */
+
+.chapter-dropdown {
+  position: relative;
+  z-index: 1040;
+}
+
+/* Make the dropdown show above other elements */
+.form-select-enhanced.chapters-dropdown,
+.chapter-select .css-26l3qy-menu {
+  z-index: 1050 !important;
+}
+
+/* Set proper height for dropdowns */
+.form-select-enhanced.chapters-dropdown {
+  height: auto !important;
+  max-height: 300px !important; 
+  overflow-y: auto !important;
+}
+
+.form-select-enhanced.chapters-dropdown option {
+  padding: 8px 12px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Override any conflicting styles */
+.form-select-enhanced.chapters-dropdown,
+.react-select__menu {
+  position: absolute !important;
+  width: 100% !important;
+}
+
+/* Add proper margin to create space between sections */
+.progress-overview-section {
+  margin-top: 30px !important;
+}
+
+/* Custom scrollbar */
+.form-select-enhanced.chapters-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.form-select-enhanced.chapters-dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.form-select-enhanced.chapters-dropdown::-webkit-scrollbar-thumb {
+  background: #ccdbe8;
+  border-radius: 10px;
+}
+
+.form-select-enhanced.chapters-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #00c4d6;
+}
+
+/* Enhanced Styles for AI-Powered Study Session */
+.study-session-section {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  margin-bottom: 40px !important;
+}
+
+.study-session-section .card-header {
+  padding: 20px 25px !important;
+  font-size: 1.25rem !important;
+}
+
+.study-session-section .card-body {
+  padding: 30px !important;
+}
+
+.study-session-section .form-label {
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  margin-bottom: 12px !important;
+}
+
+.study-session-section .form-select-enhanced {
+  height: 55px !important;
+  border-radius: 10px !important;
+  font-size: 1.05rem !important;
+  padding-left: 15px !important;
+}
+
+.study-session-section .chapter-select {
+  font-size: 1.05rem !important;
+}
+
+.generate-questions-btn {
+  padding: 15px 35px !important;
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+  margin-top: 15px !important;
+  box-shadow: 0 6px 18px rgba(45, 99, 216, 0.3) !important;
+}
+
+/* Make sure form elements have enough spacing */
+.study-session-section .row {
+  margin-bottom: 15px !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .study-session-section {
+    transform: none; /* Remove scaling on mobile */
+  }
+  
+  .study-session-section .card-body {
+    padding: 25px 20px !important;
+  }
 }
