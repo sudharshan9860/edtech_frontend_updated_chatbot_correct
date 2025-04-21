@@ -1,19 +1,25 @@
-import React, { useContext, useState } from 'react';
-import { Container, Navbar, Nav, Offcanvas } from 'react-bootstrap';
+import React, { useContext, useState, useEffect } from 'react';
+import { Container, Navbar, Nav } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faSignOutAlt, 
   faChartLine, 
-  faVolumeUp,
-  faVolumeMute,
-  faTrophy,
-  faUser  // Added user icon
+  faGraduationCap,
+  faCalendarAlt,
+  faClock,
+  faBook,
+  faAward,
+  faBell,
+  faSearch,
+  faUser,
+  faQuestionCircle 
 } from '@fortawesome/free-solid-svg-icons';
 import './Layout.css';
 import { AuthContext } from './AuthContext';
 import NotificationDropdown from './NotificationDropdown';
 import SoundConfigModal from './SoundConfigModal';
+import FixedFooter from './FixedFooter';
 import { soundManager } from '../utils/SoundManager';
 
 const Layout = ({ children }) => {
@@ -24,6 +30,23 @@ const Layout = ({ children }) => {
   // Sound configuration state
   const [showSoundConfig, setShowSoundConfig] = useState(false);
   const [isSoundEnabled, setIsSoundEnabled] = useState(soundManager.isSoundEnabled);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Handle scroll event to add shadow to header
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -35,81 +58,104 @@ const Layout = ({ children }) => {
     { path: '/analytics', label: 'Analytics' },
     { path: '/progress-dashboard', label: 'Progress' },
     { path: '/leaderboard', label: 'Leaderboard' },
-    { path: '/quests', label: 'Quests', icon: faTrophy }
+    { path: '/quests', label: 'Quests' }
+  ];
+
+  const sidebarMenuItems = [
+    { path: '/my-courses', label: 'My Courses', icon: faBook },
+    { path: '/performance', label: 'Performance', icon: faChartLine },
+    { path: '/schedule', label: 'Schedule', icon: faCalendarAlt },
+    { path: '/achievements', label: 'Achievements', icon: faAward },
+    { path: '/study-history', label: 'Study History', icon: faClock },
+    { path: '/resources', label: 'Resources', icon: faGraduationCap }
   ];
 
   return (
     <div id="main-content" className="d-flex flex-column min-vh-100">
-      <Navbar expand="lg" className="custom-navbar">
-        <Container fluid>
-          <Navbar.Brand className="h3 text-white">Dashboard</Navbar.Brand>
-          <Navbar.Toggle aria-controls="offcanvasNavbar" />
-          <Navbar.Offcanvas
-            id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel"
-            placement="end"
-          >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title id="offcanvasNavbarLabel" className="text-white">
-                Menu
-              </Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-              <Nav className="ms-auto justify-content-end flex-grow-1 pe-3">
-                {navigationLinks.map((link) => (
-                  <Nav.Link
-                    key={link.path}
-                    className={`custom-nav-link mx-2 ${currentLocation.pathname === link.path ? 'active' : ''}`}
-                    onClick={() => navigate(link.path)}
-                  >
-                    {link.icon && <FontAwesomeIcon icon={link.icon} className="mr-2" />}
-                    {link.label}
-                  </Nav.Link>
-                ))}
-                
-                {/* Sound Toggle */}
-                <Nav.Link 
-                  className="custom-nav-link mx-2"
-                  onClick={() => setShowSoundConfig(true)}
-                >
-                  <FontAwesomeIcon 
-                    icon={isSoundEnabled ? faVolumeUp : faVolumeMute} 
-                    className="text-white"
-                  />
-                </Nav.Link>
-
-                {/* Added margin to create spacing */}
-                <div className=" ms-3">
-                  <NotificationDropdown />
+      {/* Top Header */}
+      <header className={`top-header ${isScrolled ? 'header-shadow' : ''}`}>
+        <div className="container-fluid">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="brand-name animate-on-load">ORCALEX EDUCATION</div>
+            
+            <div className="search-section">
+              <div className="search-bar">
+                <FontAwesomeIcon icon={faSearch} className="search-icon" />
+                <input type="text" placeholder="Search for lessons, quizzes..." />
+              </div>
+            </div>
+            
+            <div className="user-section">
+              <div className="notification-icon me-3">
+                <FontAwesomeIcon icon={faBell} />
+              </div>
+              <div className="user-avatar d-flex align-items-center">
+                <div className="avatar-circle me-2">
+                  <FontAwesomeIcon icon={faUser} />
                 </div>
-                
-                {/* Admin section with spacing */}
-                <Nav.Item className="d-flex align-items-center ms-3">
-                  <FontAwesomeIcon 
-                    icon={faUser} 
-                    className="text-white" 
-                  />
-                  <span className="ms-2 username-text admin-text">{username}</span>
-                  <FontAwesomeIcon 
-                    icon={faSignOutAlt} 
-                    onClick={handleLogout}  
-                    className="logout-icon text-white ms-3" 
-                    style={{ cursor: 'pointer' }} 
-                  />
-                </Nav.Item>
-              </Nav>
-            </Offcanvas.Body>
-          </Navbar.Offcanvas>
-        </Container>
-      </Navbar>
+                <span className="user-role">Student</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
 
-      <main className="flex-fill">
-        <Container>{children}</Container>
-      </main>
+      {/* Main Navigation */}
+      <div className="main-navigation">
+        <div className="container-fluid">
+          <Nav className="main-nav">
+            {navigationLinks.map((link, index) => (
+              <Nav.Link
+                key={link.path}
+                className={`nav-link ${currentLocation.pathname === link.path ? 'active' : ''}`}
+                onClick={() => navigate(link.path)}
+                style={{'--index': index}}
+              >
+                {link.label}
+              </Nav.Link>
+            ))}
+          </Nav>
+        </div>
+      </div>
 
-      <footer className="footer text-center">
-        <p>&copy; AI EDUCATOR</p>
-      </footer>
+      {/* Main Content with Sidebar */}
+      <div className="dashboard-container">
+        {/* Sidebar */}
+        <div className="sidebar">
+          <div className="sidebar-welcome">
+            <div className="avatar-circle">
+              <FontAwesomeIcon icon={faGraduationCap} />
+            </div>
+            <div className="welcome-text">
+              <div>Welcome back,</div>
+              <div className="user-name">{username || 'Student'}</div>
+            </div>
+          </div>
+          
+          <div className="sidebar-menu">
+            {sidebarMenuItems.map((item, index) => (
+              <div 
+                key={index}
+                className={`menu-item ${currentLocation.pathname === item.path ? 'active' : ''}`}
+                onClick={() => navigate(item.path)}
+              >
+                <div className="menu-icon">
+                  <FontAwesomeIcon icon={item.icon} />
+                </div>
+                <span>{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="main-content">
+          {children}
+        </div>
+      </div>
+
+      {/* Fixed Footer */}
+      <FixedFooter />
 
       {/* Sound Configuration Modal */}
       <SoundConfigModal 
