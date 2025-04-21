@@ -418,10 +418,6 @@ function StudentDash() {
     });
   };
 
-  <div className={`scroll-to-top ${animateCards ? 'show' : ''}`} onClick={scrollToTop}>
-  <FontAwesomeIcon icon={faArrowUp} />
-</div>
-
   return (
     <div className="student-dash-container">
       {shouldShowTutorialForPage("studentDash") && (
@@ -502,51 +498,62 @@ function StudentDash() {
                 </Row>
 
                 <Row>
-
-                <Col md={6} className="mb-3">
-  <Form.Group controlId="formChapters">
-    <Form.Label>
-      <FontAwesomeIcon icon={faListAlt} className="me-2" />
-      Chapters
-    </Form.Label>
-    {questionType === "external" ? (
-      // Single select for "Set of Questions" type
-      <Form.Select
-        value={selectedChapters.length > 0 ? selectedChapters[0] : ''}
-        onChange={(e) => setSelectedChapters([e.target.value])}
-        className="form-select-enhanced"
-        disabled={!selectedSubject}
-      >
-        <option value="">Select Chapter</option>
-        {chapters.map((chapter) => (
-          <option key={chapter.topic_code} value={chapter.topic_code}>
-            {chapter.name}
-          </option>
-        ))}
-      </Form.Select>
-    ) : (
-      // Multi-select using react-select for other question types
-      <Select
-        isMulti
-        options={chapters.map((chapter) => ({
-          value: chapter.topic_code,
-          label: chapter.name,
-        }))}
-        value={selectedChapters.map((code) => ({
-          value: code,
-          label: chapters.find((chapter) => chapter.topic_code === code)?.name
-        }))}
-        onChange={(selectedOptions) => {
-          setSelectedChapters(selectedOptions ? selectedOptions.map(option => option.value) : []);
-        }}
-        isDisabled={!selectedSubject}
-        placeholder="Select Chapters"
-        classNamePrefix="react-select"
-        className="chapter-select"
-      />
-    )}
-  </Form.Group>
-</Col>
+                  <Col md={6} className="mb-3">
+                    <Form.Group controlId="formChapters">
+                      <Form.Label>
+                        <FontAwesomeIcon icon={faListAlt} className="me-2" />
+                        Chapters
+                      </Form.Label>
+                      {questionType === "external" ? (
+                        // Single select for "Set of Questions" type
+                        <Form.Select
+                          value={selectedChapters.length > 0 ? selectedChapters[0] : ''}
+                          onChange={(e) => setSelectedChapters([e.target.value])}
+                          className="form-select-enhanced"
+                          disabled={!selectedSubject}
+                          style={{ maxHeight: '300px', overflow: 'auto' }}
+                        >
+                          <option value="">Select Chapter</option>
+                          {chapters.map((chapter) => (
+                            <option key={chapter.topic_code} value={chapter.topic_code}>
+                              {chapter.name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      ) : (
+                        // Multi-select using react-select for other question types
+                        <Select
+                          isMulti
+                          options={chapters.map((chapter) => ({
+                            value: chapter.topic_code,
+                            label: chapter.name,
+                          }))}
+                          value={selectedChapters.map((code) => ({
+                            value: code,
+                            label: chapters.find((chapter) => chapter.topic_code === code)?.name
+                          }))}
+                          onChange={(selectedOptions) => {
+                            setSelectedChapters(selectedOptions ? selectedOptions.map(option => option.value) : []);
+                          }}
+                          isDisabled={!selectedSubject}
+                          placeholder="Select Chapters"
+                          classNamePrefix="react-select"
+                          className="chapter-select"
+                          styles={{
+                            // Add these styles to ensure dropdown shows all options with scrolling
+                            menu: (provided) => ({
+                              ...provided,
+                              maxHeight: '300px', // Increased height for dropdown
+                            }),
+                            menuList: (provided) => ({
+                              ...provided,
+                              maxHeight: '300px', // Increased height for dropdown content
+                            }),
+                          }}
+                        />
+                      )}
+                    </Form.Group>
+                  </Col>
                   <Col md={6} className="mb-3">
                     <Form.Group controlId="formQuestionType">
                       <Form.Label>

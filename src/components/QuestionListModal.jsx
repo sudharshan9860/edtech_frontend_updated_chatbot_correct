@@ -71,26 +71,30 @@ const QuestionListModal = ({
       console.log("Question clicked, continuing tutorial flow");
       continueTutorialFlow("questionListModal", "solveQuestion");
 
-      const selectedQuestion = {
-        question: questionData.question,
-        image: questionData.question_image
-          ? `data:image/png;base64,${questionData.question_image}`
-          : null,
-      };
+      // Properly handle the image whether it's in question_image or already processed in image
+      const imageUrl = questionData.image || 
+        (questionData.question_image ? `data:image/png;base64,${questionData.question_image}` : null);
 
-      onQuestionClick(selectedQuestion.question, index, selectedQuestion.image);
+      onQuestionClick(questionData.question, index, imageUrl);
     }
   };
 
   const handleMultipleSelectSubmit = () => {
-    if (selectedQuestions.length === 5) {
-      const selectedQuestionsData = selectedQuestions.map((index) => ({
-        question: questionList[index].question,
-        image: questionList[index].question_image
-          ? `data:image/png;base64,${questionList[index].question_image}`
-          : null,
-        index: index,
-      }));
+    if (selectedQuestions.length > 0) {
+      const selectedQuestionsData = selectedQuestions.map((index) => {
+        const questionData = questionList[index];
+        // Properly handle the image whether it's in question_image or already processed in image
+        const imageUrl = questionData.image || 
+          (questionData.question_image ? `data:image/png;base64,${questionData.question_image}` : null);
+        
+        return {
+          question: questionData.question,
+          image: imageUrl,
+          index: index,
+          // Store the original question_image too for reference
+          question_image: questionData.question_image
+        };
+      });
       onMultipleSelectSubmit(selectedQuestionsData);
     }
   };
@@ -145,10 +149,15 @@ const QuestionListModal = ({
                   <div className="question-number">{index + 1}</div>
                   <div className="question-content">
                     <div className="question-text">{questionData.question}</div>
-                    {questionData.question_image && (
+                    {/* Check for both image formats */}
+                    {(questionData.question_image || questionData.image) && (
                       <div className="question-image-preview">
                         <img
-                          src={`data:image/png;base64,${questionData.question_image}`}
+                          src={
+                            questionData.image
+                              ? questionData.image
+                              : `data:image/png;base64,${questionData.question_image}`
+                          }
                           alt={`Question ${index + 1}`}
                           className="preview-image"
                         />
@@ -168,7 +177,7 @@ const QuestionListModal = ({
           <Button
             variant="primary"
             onClick={handleMultipleSelectSubmit}
-            disabled={selectedQuestions.length !== 5}
+            disabled={selectedQuestions.length === 0}
           >
             Submit Selected Questions ({selectedQuestions.length}/5)
           </Button>
