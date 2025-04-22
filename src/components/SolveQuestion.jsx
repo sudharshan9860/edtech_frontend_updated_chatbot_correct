@@ -352,29 +352,29 @@ function SolveQuestion() {
   const sendFormData = async (flags = {}, actionType) => {
     setProcessingButton(actionType);
     setError(null);
-
+  
     const formData = new FormData();
     formData.append("class_id", class_id);
     formData.append("subject_id", subject_id);
     formData.append("topic_ids", topic_ids);
     formData.append("question", currentQuestion.question);
     formData.append("subtopic", subtopic);
-
+  
     Object.entries(flags).forEach(([key, value]) => {
       formData.append(key, value);
     });
-
+  
     // Add images if required by the action
     if (flags.submit) {
       images.forEach((image) => {
         formData.append("ans_img", image);
       });
     }
-
+  
     try {
       // Use the custom upload method for actions with file uploads
       let response;
-
+  
       if (flags.submit) {
         // Use custom upload method with progress tracking
         response = await axiosInstance.uploadFile(
@@ -386,12 +386,12 @@ function SolveQuestion() {
         // Regular request for actions without file uploads
         response = await axiosInstance.post("/anssubmit/", formData);
       }
-
+  
       // Navigate to results page
       navigate("/resultpage", {
         state: {
           ...response.data,
-          actionType,
+          actionType: "correct",
           questionList,
           class_id,
           subject_id,
@@ -399,11 +399,12 @@ function SolveQuestion() {
           subtopic,
           questionImage: currentQuestion.image,
           questionNumber: currentQuestion.questionNumber,
+          selectedQuestions: selectedQuestions, // Pass selected questions to the result page
         },
       });
     } catch (error) {
       console.error("API Error:", error);
-
+  
       // Set user-friendly error message
       if (error.code === "ECONNABORTED") {
         setError(
@@ -414,7 +415,7 @@ function SolveQuestion() {
       } else {
         setError("Failed to perform the action. Please try again.");
       }
-
+  
       setProcessingButton(null);
       setUploadProgress(0);
     }

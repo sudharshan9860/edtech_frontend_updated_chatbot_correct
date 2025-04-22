@@ -372,20 +372,20 @@ function StudentDash() {
 
     // Navigate to SolveQuestion with the first selected question
     const firstQuestion = selectedQuestionsData[0];
-    navigate("/solvequestion", {
-      state: {
-        question: firstQuestion.question,
-        questionNumber: firstQuestion.index + 1,
-        questionList,
-        class_id: selectedClass,
-        subject_id: selectedSubject,
-        topic_ids: selectedChapters,
-        subtopic: questionType === "external" ? questionLevel : "",
-        image: firstQuestion.image,
-        selectedQuestions: selectedQuestionsData,
-      },
-    });
-  };
+  navigate("/solvequestion", {
+    state: {
+      question: firstQuestion.question,
+      questionNumber: firstQuestion.index + 1,
+      questionList, // The full question list is still needed for reference
+      class_id: selectedClass,
+      subject_id: selectedSubject,
+      topic_ids: selectedChapters,
+      subtopic: questionType === "external" ? questionLevel : "",
+      image: firstQuestion.image,
+      selectedQuestions: selectedQuestionsData, // The selected questions subset
+    },
+  });
+};
 
   // Navigate to view all activities
   const handleViewAllActivities = () => {
@@ -495,8 +495,6 @@ function StudentDash() {
                     </Form.Group>
                   </Col>
                 </Row>
-                // This is the modified section from StudentDash.jsx
-// Replace the chapter dropdown section with this code
 
 <Row>
   <Col md={6} className="mb-3 chapter-dropdown" style={{ position: 'relative', zIndex: 9999 }}>

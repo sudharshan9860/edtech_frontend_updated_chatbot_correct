@@ -52,7 +52,7 @@ const QuestionListModal = ({
     console.log("Tutorial steps in QuestionListModal completed");
   };
 
-  const handleQuestionClick = (questionData, index) => {
+  const handleQuestionClick = (questionData, index, imageUrl) => {
     if (isMultipleSelect) {
       // Toggle selection for multiple select mode
       setSelectedQuestions((prev) => {
@@ -70,11 +70,11 @@ const QuestionListModal = ({
       // Single selection mode
       console.log("Question clicked, continuing tutorial flow");
       continueTutorialFlow("questionListModal", "solveQuestion");
-
+  
       // Properly handle the image whether it's in question_image or already processed in image
       const imageUrl = questionData.image || 
         (questionData.question_image ? `data:image/png;base64,${questionData.question_image}` : null);
-
+  
       onQuestionClick(questionData.question, index, imageUrl);
     }
   };

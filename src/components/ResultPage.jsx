@@ -170,16 +170,21 @@ const ResultPage = () => {
   };
 
   const handleQuestionSelect = (selectedQuestion, index, selectedImage) => {
+    // Use the index from the selectedQuestions array if it exists,
+    // otherwise use the index from the full questionList
+    const questionSource = location.state?.selectedQuestions || questionList;
+    
     navigate('/solvequestion', { 
       state: { 
         question: selectedQuestion, 
         questionNumber: index + 1, 
-        questionList, 
+        questionList: questionSource, // Pass the selected questions as the questionList
         class_id,
         subject_id,
         topic_ids,
         subtopic,
-        image: selectedImage
+        image: selectedImage,
+        selectedQuestions: location.state?.selectedQuestions // Pass selected questions through
       } 
     });
   };
@@ -241,21 +246,21 @@ return (
     }
     
     // If we have auto-calculated a score, show it
-    if (autoCalculatedScore !== null) {
-      return (
-        <div className="result-score auto-calculated">
-          <p><strong>Auto-Score:</strong> {autoCalculatedScore} / {totalValue}</p>
-          <span className="score-note">This score was auto-calculated based on your answer</span>
-        </div>
-      );
-    }
+    // if (autoCalculatedScore !== null) {
+    //   return (
+    //     <div className="result-score auto-calculated">
+    //       <p><strong>Auto-Score:</strong> {autoCalculatedScore} / {totalValue}</p>
+    //       <span className="score-note">This score was auto-calculated based on your answer</span>
+    //     </div>
+    //   );
+    // }
     
-    // Default case: show zero score
-    return (
-      <div className="result-score">
-        <p><strong>Score:</strong> 0 / {totalValue}</p>
-      </div>
-    );
+    // // Default case: show zero score
+    // return (
+    //   <div className="result-score">
+    //     <p><strong>Score:</strong> 0 / {totalValue}</p>
+    //   </div>
+    // );
   };
 
   // Function to render solution steps with proper formatting
@@ -509,11 +514,11 @@ return (
       </Row>
 
       <QuestionListModal 
-        show={showQuestionListModal} 
-        onHide={handleCloseQuestionList} 
-        questionList={questionList} 
-        onQuestionClick={handleQuestionSelect} 
-      />
+  show={showQuestionListModal} 
+  onHide={handleCloseQuestionList} 
+  questionList={location.state?.selectedQuestions || questionList} // Use selected questions if available
+  onQuestionClick={handleQuestionSelect} 
+/>
     </Container>
   );
 };
