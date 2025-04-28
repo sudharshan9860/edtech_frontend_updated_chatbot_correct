@@ -1,14 +1,14 @@
 import React, { useContext, useState } from 'react';
-import { Container, Navbar, Nav, Offcanvas } from 'react-bootstrap';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Container, Navbar } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faSignOutAlt, 
-  faChartLine, 
   faVolumeUp,
   faVolumeMute,
-  faTrophy,
-  faUser  // Added user icon
+  faUser,
+  faSearch,
+  faBell
 } from '@fortawesome/free-solid-svg-icons';
 import './Layout.css';
 import { AuthContext } from './AuthContext';
@@ -18,7 +18,6 @@ import { soundManager } from '../utils/SoundManager';
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
-  const currentLocation = useLocation();
   const { username, logout } = useContext(AuthContext);
   
   // Sound configuration state
@@ -30,85 +29,66 @@ const Layout = ({ children }) => {
     navigate('/');
   };
 
-  const navigationLinks = [
-    { path: '/student-dash', label: 'Student Dash' },
-    { path: '/analytics', label: 'Analytics' },
-    { path: '/progress-dashboard', label: 'Progress' },
-    { path: '/leaderboard', label: 'Leaderboard' },
-    { path: '/quests', label: 'Quests', icon: faTrophy }
-  ];
-
   return (
-    <div id="main-content" className="d-flex flex-column min-vh-100">
-      <Navbar expand="lg" className="custom-navbar">
+    <div className="d-flex flex-column min-vh-100">
+      <Navbar className="custom-navbar">
         <Container fluid>
-          <Navbar.Brand className="h3 text-white">Dashboard</Navbar.Brand>
-          <Navbar.Toggle aria-controls="offcanvasNavbar" />
-          <Navbar.Offcanvas
-            id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel"
-            placement="end"
-          >
-            <Offcanvas.Header closeButton>
-              <Offcanvas.Title id="offcanvasNavbarLabel" className="text-white">
-                Menu
-              </Offcanvas.Title>
-            </Offcanvas.Header>
-            <Offcanvas.Body>
-              <Nav className="ms-auto justify-content-end flex-grow-1 pe-3">
-                {navigationLinks.map((link) => (
-                  <Nav.Link
-                    key={link.path}
-                    className={`custom-nav-link mx-2 ${currentLocation.pathname === link.path ? 'active' : ''}`}
-                    onClick={() => navigate(link.path)}
-                  >
-                    {link.icon && <FontAwesomeIcon icon={link.icon} className="mr-2" />}
-                    {link.label}
-                  </Nav.Link>
-                ))}
-                
-                {/* Sound Toggle */}
-                <Nav.Link 
-                  className="custom-nav-link mx-2"
-                  onClick={() => setShowSoundConfig(true)}
-                >
-                  <FontAwesomeIcon 
-                    icon={isSoundEnabled ? faVolumeUp : faVolumeMute} 
-                    className="text-white"
-                  />
-                </Nav.Link>
-
-                {/* Added margin to create spacing */}
-                <div className=" ms-3">
-                  <NotificationDropdown />
-                </div>
-                
-                {/* Admin section with spacing */}
-                <Nav.Item className="d-flex align-items-center ms-3">
-                  <FontAwesomeIcon 
-                    icon={faUser} 
-                    className="text-white" 
-                  />
-                  <span className="ms-2 username-text admin-text">{username}</span>
-                  <FontAwesomeIcon 
-                    icon={faSignOutAlt} 
-                    onClick={handleLogout}  
-                    className="logout-icon text-white ms-3" 
-                    style={{ cursor: 'pointer' }} 
-                  />
-                </Nav.Item>
-              </Nav>
-            </Offcanvas.Body>
-          </Navbar.Offcanvas>
+          <Navbar.Brand className="h3 text-white" onClick={() => navigate('/student-dash')}>
+            ORCALEX EDUCATION
+          </Navbar.Brand>
+          
+          {/* Search Bar */}
+          <div className="search-container d-none d-md-flex mx-auto">
+            <div className="search-input-wrapper">
+              <FontAwesomeIcon icon={faSearch} className="search-icon" />
+              <input 
+                type="text" 
+                placeholder="Search for lessons, quizzes..." 
+                className="search-input"
+              />
+            </div>
+          </div>
+          
+          {/* User Section */}
+          <div className="user-actions d-flex align-items-center">
+            <div className="notification-wrapper">
+              <FontAwesomeIcon icon={faBell} className="text-white notification-bell" />
+              <span className="notification-badge">3</span>
+            </div>
+            
+            <div className="user-profile-section d-flex align-items-center ms-3">
+              <div className="student-badge" onClick={() => navigate('/profile')}>
+                <FontAwesomeIcon icon={faUser} className="user-icon" />
+                <span className="ms-2 d-none d-md-inline">Student</span>
+              </div>
+            </div>
+            
+            <div 
+              className="sound-toggle mx-3"
+              onClick={() => setShowSoundConfig(true)}
+            >
+              <FontAwesomeIcon 
+                icon={isSoundEnabled ? faVolumeUp : faVolumeMute} 
+                className="text-white"
+              />
+            </div>
+            
+            <FontAwesomeIcon 
+              icon={faSignOutAlt} 
+              onClick={handleLogout}  
+              className="logout-icon text-white" 
+              style={{ cursor: 'pointer' }} 
+            />
+          </div>
         </Container>
       </Navbar>
 
       <main className="flex-fill">
-        <Container>{children}</Container>
+        {children}
       </main>
 
       <footer className="footer text-center">
-        <p>&copy; AI EDUCATOR</p>
+        <p>&copy; ORCALEX Technologies {new Date().getFullYear()}</p>
       </footer>
 
       {/* Sound Configuration Modal */}

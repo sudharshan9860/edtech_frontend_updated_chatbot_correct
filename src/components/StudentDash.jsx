@@ -1,115 +1,59 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import "./StudentDash.css";
-import axiosInstance from "../api/axiosInstance";
-import QuestionListModal from "./QuestionListModal";
-import Select from "react-select";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Tutorial from "./Tutorial";
-import { useTutorial } from "../contexts/TutorialContext";
-import {
-  faSchool,
-  faBookOpen,
-  faListAlt,
+// src/components/StudentDash.jsx
+import React, { useState, useEffect, useContext } from 'react';
+import { Form, Button, Row, Col, Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import './StudentDash.css';
+import axiosInstance from '../api/axiosInstance';
+import QuestionListModal from './QuestionListModal';
+import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faSchool, 
+  faBookOpen, 
+  faListAlt, 
   faClipboardQuestion,
-  faQuestionCircle,
-} from "@fortawesome/free-solid-svg-icons";
+  faGraduationCap,
+  faHome,
+  faChartLine,
+  faTrophy,
+  faHistory,
+  faBook,
+  faBookReader
+} from '@fortawesome/free-solid-svg-icons';
+import { AuthContext } from './AuthContext';
 
 function StudentDash() {
   const navigate = useNavigate();
+  const { username } = useContext(AuthContext);
 
   // State for dropdown data
   const [classes, setClasses] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [chapters, setChapters] = useState([]);
-  const [subTopics, setSubTopics] = useState([]); // Added for external questions
+  const [subtopicSets, setSubtopicSets] = useState([]);
 
   // State for selections
-  const [selectedClass, setSelectedClass] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedClass, setSelectedClass] = useState('10');
+  const [selectedSubject, setSelectedSubject] = useState('Mathematics');
   const [selectedChapters, setSelectedChapters] = useState([]);
-  const [questionType, setQuestionType] = useState("");
-  const [questionLevel, setQuestionLevel] = useState("");
+  const [questionType, setQuestionType] = useState('');
+  const [questionLevel, setQuestionLevel] = useState('');
   const [showQuestionList, setShowQuestionList] = useState(false);
   const [questionList, setQuestionList] = useState([]);
-  const [selectedQuestions, setSelectedQuestions] = useState([]);
-
-  // Enhanced tutorial usage
-  const {
-    shouldShowTutorialForPage,
-    markPageCompleted,
-    resetTutorial,
-    setCurrentPage,
-    continueTutorialFlow,
-    restartTutorialForPage,
-  } = useTutorial();
-
-  // Update current page when component mounts
-  useEffect(() => {
-    setCurrentPage("studentDash");
-  }, [setCurrentPage]);
-
-  const tutorialSteps = [
-    {
-      target: "#formClass",
-      content: "Start by selecting your class",
-      disableBeacon: true,
-    },
-    {
-      target: "#formSubject",
-      content: "Next, choose your subject",
-    },
-    {
-      target: ".select-chapters",
-      content: "Select one or more chapters to study",
-    },
-    {
-      target: "#formQuestionType",
-      content: "Choose the type of questions you want to practice",
-    },
-    {
-      target: ".btn-generate",
-      content:
-        "Click here to generate your questions. After this, we'll continue the tutorial on the question list.",
-    },
-  ];
-
-  // Determine if generate button should be enabled
-  const isGenerateButtonEnabled = () => {
-    // If external question type is selected, also check question level
-    if (questionType === "external") {
-      return (
-        selectedClass !== "" &&
-        selectedSubject !== "" &&
-        selectedChapters.length > 0 &&
-        questionType !== "" &&
-        questionLevel !== ""
-      );
-    }
-
-    // For other question types, just check the main 4 categories
-    return (
-      selectedClass !== "" &&
-      selectedSubject !== "" &&
-      selectedChapters.length > 0 &&
-      questionType !== ""
-    );
-  };
-
-  // Handle tutorial completion for this component
-  const handleTutorialComplete = () => {
-    console.log("Tutorial steps in StudentDash completed");
-  };
+  const [recentQuestionSets, setRecentQuestionSets] = useState([
+    { id: 1, title: 'Circles - Exercise 2', date: '2 days ago' },
+    { id: 2, title: 'Trigonometry Practice', date: '5 days ago' },
+    { id: 3, title: 'Algebra - Solved Examples', date: '1 week ago' }
+  ]);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const classResponse = await axiosInstance.get("/classes/");
+        const classResponse = await axiosInstance.get('/classes/');
         const classesData = classResponse.data.data;
         setClasses(classesData);
       } catch (error) {
-        console.error("Error fetching classes", error);
+        console.error('Error fetching classes', error);
       }
     }
     fetchData();
@@ -119,17 +63,12 @@ function StudentDash() {
     async function fetchSubjects() {
       if (selectedClass) {
         try {
-          const subjectResponse = await axiosInstance.post("/subjects/", {
-            class_id: selectedClass,
+          const subjectResponse = await axiosInstance.post('/subjects/', {
+            class_id: selectedClass
           });
           setSubjects(subjectResponse.data.data);
-          // Reset dependent fields when class changes
-          setSelectedSubject("");
-          setSelectedChapters([]);
-          setQuestionType("");
-          setQuestionLevel("");
         } catch (error) {
-          console.error("Error fetching subjects:", error);
+          console.error('Error fetching subjects:', error);
           setSubjects([]);
         }
       }
@@ -141,17 +80,13 @@ function StudentDash() {
     async function fetchChapters() {
       if (selectedSubject && selectedClass) {
         try {
-          const chapterResponse = await axiosInstance.post("/chapters/", {
+          const chapterResponse = await axiosInstance.post('/chapters/', {
             subject_id: selectedSubject,
             class_id: selectedClass,
           });
           setChapters(chapterResponse.data.data);
-          // Reset dependent fields when subject changes
-          setSelectedChapters([]);
-          setQuestionType("");
-          setQuestionLevel("");
         } catch (error) {
-          console.error("Error fetching chapters:", error);
+          console.error('Error fetching chapters:', error);
           setChapters([]);
         }
       }
@@ -159,80 +94,45 @@ function StudentDash() {
     fetchChapters();
   }, [selectedSubject, selectedClass]);
 
-  // New effect for fetching subtopics when External question type is selected
-  useEffect(() => {
-    async function fetchSubTopics() {
-      if (
-        questionType === "external" &&
-        selectedClass &&
-        selectedSubject &&
-        selectedChapters.length > 0
-      ) {
-        try {
-          const response = await axiosInstance.post("/question-images/", {
-            classid: selectedClass,
-            subjectid: selectedSubject,
-            topicid: selectedChapters[0], // Assuming single chapter selection
-            external: true,
-          });
-          console.log("the response data is : ", response);
-          setSubTopics(response.data.subtopics);
-        } catch (error) {
-          console.error("Error fetching subtopics:", error);
-          setSubTopics([]);
-        }
-      }
-    }
-    fetchSubTopics();
-  }, [questionType, selectedClass, selectedSubject, selectedChapters]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!isGenerateButtonEnabled()) {
-      console.error("Please select all required fields");
+    
+    if (!questionType || 
+      (questionType !== 'solved' && 
+       questionType !== 'exercise' && 
+       questionType !== 'external')) {
+      console.error('Please select a valid question type');
       return;
     }
-
+    
     const requestData = {
       classid: Number(selectedClass),
       subjectid: Number(selectedSubject),
       topicid: selectedChapters,
-      solved: questionType === "solved",
-      exercise: questionType === "exercise",
-      subtopic: questionType === "external" ? questionLevel : null,
+      solved: questionType === 'solved',
+      exercise: questionType === 'exercise',
+      external: questionType === 'external' ? questionLevel : null
     };
-
+    
     try {
-      const response = await axiosInstance.post(
-        "/question-images/",
-        requestData
-      );
+      const response = await axiosInstance.post('/question-images/', requestData);
       // Process questions with images
-      const questionsWithImages = response.data.questions.map((question) => ({
+      const questionsWithImages = response.data.questions.map(question => ({
         ...question,
         question: question.question,
-        image: question.question_image
-          ? `data:image/png;base64,${question.question_image}`
-          : null,
+        image: question.question_image ? `data:image/png;base64,${question.question_image}` : null
       }));
-
+      
       setQuestionList(questionsWithImages);
-      setSelectedQuestions([]); // Reset selected questions
-
-      // Continue tutorial flow to QuestionListModal before showing the modal
-      continueTutorialFlow("studentDash", "questionListModal");
-
-      // Show the modal after setting up tutorial flow
       setShowQuestionList(true);
     } catch (error) {
-      console.error("Error generating questions:", error);
-      alert("Failed to generate questions. Please try again.");
+      console.error('Error generating questions:', error);
+      alert('Failed to generate questions. Please try again.');
     }
   };
 
   const handleQuestionClick = (question, index, image) => {
-    navigate("/solvequestion", {
+    navigate('/solvequestion', {
       state: {
         question,
         questionNumber: index + 1,
@@ -240,76 +140,78 @@ function StudentDash() {
         class_id: selectedClass,
         subject_id: selectedSubject,
         topic_ids: selectedChapters,
-        subtopic: questionType === "external" ? questionLevel : "",
-        image,
-        selectedQuestions: selectedQuestions,
-      },
+        subtopic: '',
+        image
+      }
     });
   };
 
-  const handleMultipleSelectSubmit = (selectedQuestionsData) => {
-    setSelectedQuestions(selectedQuestionsData);
-    setShowQuestionList(false);
-
-    // Navigate to SolveQuestion with the first selected question
-    const firstQuestion = selectedQuestionsData[0];
-    navigate("/solvequestion", {
-      state: {
-        question: firstQuestion.question,
-        questionNumber: firstQuestion.index + 1,
-        questionList,
-        class_id: selectedClass,
-        subject_id: selectedSubject,
-        topic_ids: selectedChapters,
-        subtopic: questionType === "external" ? questionLevel : "",
-        image: firstQuestion.image,
-        selectedQuestions: selectedQuestionsData,
-      },
-    });
+  const navigateTo = (path) => {
+    navigate(path);
   };
 
-  // Reset Question Level when Question Type changes
-  useEffect(() => {
-    if (questionType !== "external") {
-      setQuestionLevel("");
-    }
-  }, [questionType]);
+  const sidebarItems = [
+    { icon: faHome, label: 'Dashboard', path: '/student-dash', active: true },
+    { icon: faChartLine, label: 'Analytics', path: '/analytics' },
+    { icon: faGraduationCap, label: 'Progress', path: '/progress-dashboard' },
+    { icon: faTrophy, label: 'Leaderboard', path: '/leaderboard' },
+    { icon: faClipboardQuestion, label: 'Quests', path: '/quests' },
+    { icon: faHistory, label: 'Study History', path: '#' },
+    { icon: faBook, label: 'Resources', path: '#' }
+  ];
 
   return (
-    <div className="d-flex flex-column min-vh-100">
-      {shouldShowTutorialForPage("studentDash") && (
-        <Tutorial steps={tutorialSteps} onComplete={handleTutorialComplete} />
-      )}
-      <main className="flex-fill d-flex justify-content-center align-items-center">
-        <div className="form-container">
-          <Form onSubmit={handleSubmit}>
-            <div className="restart-tutorial-btn-container mb-3 text-right">
-              <Button
-                variant="outline-info"
-                className="restart-tutorial-btn"
-                onClick={() => {
-                  console.log("Restarting tutorial on StudentDash page...");
-                  restartTutorialForPage("studentDash");
-                }}
-                size="sm"
-              >
-                <FontAwesomeIcon icon={faQuestionCircle} className="me-2" />
-                Replay Tutorial
-              </Button>
+    <div className="student-dash-container">
+      {/* Sidebar */}
+      <div className="sidebar">
+        <div className="user-profile">
+          <div className="avatar-circle">
+            {username?.charAt(0).toUpperCase() || 'A'}
+          </div>
+          <div className="welcome-text">
+            <p>Welcome back,</p>
+            <h6>{username || 'Student'}</h6>
+          </div>
+        </div>
+        
+        <div className="sidebar-menu">
+          {sidebarItems.map((item, index) => (
+            <div 
+              key={index} 
+              className={`sidebar-item ${item.active ? 'active' : ''}`}
+              onClick={() => navigateTo(item.path)}
+            >
+              <FontAwesomeIcon icon={item.icon} className="sidebar-icon" />
+              <span>{item.label}</span>
             </div>
+          ))}
+        </div>
+      </div>
 
+      {/* Main Content */}
+      <div className="main-content">
+        <div className="page-header">
+          <h2>Welcome to Your Learning Journey</h2>
+        </div>
+
+        <div className="study-session-card">
+          <h4 className="card-title">
+            <FontAwesomeIcon icon={faGraduationCap} className="me-2" />
+            AI-Powered Study Session
+          </h4>
+          
+          <Form onSubmit={handleSubmit}>
             <Row className="mb-3">
               <Col xs={12} md={6}>
-                <Form.Group controlId="formClass">
-                  <Form.Label>
+                <Form.Group className="mb-3" controlId="formClass">
+                  <Form.Label className="form-label">
                     <FontAwesomeIcon icon={faSchool} className="me-2" />
                     Class
                   </Form.Label>
-                  <Form.Control
-                    as="select"
+                  <Form.Select
                     value={selectedClass}
                     onChange={(e) => setSelectedClass(e.target.value)}
-                    className="form-control"
+                    className="form-select"
                   >
                     <option value="">Select Class</option>
                     {classes.map((cls) => (
@@ -317,40 +219,35 @@ function StudentDash() {
                         {cls.class_name}
                       </option>
                     ))}
-                  </Form.Control>
+                  </Form.Select>
                 </Form.Group>
               </Col>
               <Col xs={12} md={6}>
-                <Form.Group controlId="formSubject">
-                  <Form.Label>
+                <Form.Group className="mb-3" controlId="formSubject">
+                  <Form.Label className="form-label">
                     <FontAwesomeIcon icon={faBookOpen} className="me-2" />
                     Subject
                   </Form.Label>
-                  <Form.Control
-                    as="select"
+                  <Form.Select
                     value={selectedSubject}
                     onChange={(e) => setSelectedSubject(e.target.value)}
-                    className="form-control"
-                    disabled={!selectedClass}
+                    className="form-select"
                   >
                     <option value="">Select Subject</option>
                     {subjects.map((subject) => (
-                      <option
-                        key={subject.subject_code}
-                        value={subject.subject_code}
-                      >
+                      <option key={subject.subject_code} value={subject.subject_code}>
                         {subject.subject_name}
                       </option>
                     ))}
-                  </Form.Control>
+                  </Form.Select>
                 </Form.Group>
               </Col>
             </Row>
 
             <Row className="mb-3">
-              <Col className="select-chapters" xs={12} md={6}>
-                <Form.Group controlId="formChapters">
-                  <Form.Label>
+              <Col xs={12} md={6}>
+                <Form.Group className="mb-3" controlId="formChapters">
+                  <Form.Label className="form-label">
                     <FontAwesomeIcon icon={faListAlt} className="me-2" />
                     Chapters
                   </Form.Label>
@@ -362,96 +259,93 @@ function StudentDash() {
                     }))}
                     value={selectedChapters.map((code) => ({
                       value: code,
-                      label: chapters.find(
-                        (chapter) => chapter.topic_code === code
-                      )?.name,
+                      label: chapters.find((chapter) => chapter.topic_code === code)?.name
                     }))}
                     onChange={(selectedOptions) => {
-                      setSelectedChapters(
-                        selectedOptions.map((option) => option.value)
-                      );
+                      setSelectedChapters(selectedOptions.map(option => option.value));
                     }}
                     classNamePrefix="react-select"
                     placeholder="Select Chapters"
-                    isDisabled={!selectedSubject}
+                    className="chapter-select"
                   />
                 </Form.Group>
               </Col>
               <Col xs={12} md={6}>
-                <Form.Group controlId="formQuestionType">
-                  <Form.Label>
-                    <FontAwesomeIcon
-                      icon={faClipboardQuestion}
-                      className="me-2"
-                    />
+                <Form.Group className="mb-3" controlId="formQuestionType">
+                  <Form.Label className="form-label">
+                    <FontAwesomeIcon icon={faClipboardQuestion} className="me-2" />
                     Question Type
                   </Form.Label>
-                  <Form.Control
-                    as="select"
+                  <Form.Select
                     value={questionType}
                     onChange={(e) => setQuestionType(e.target.value)}
-                    className="form-control"
-                    disabled={selectedChapters.length === 0}
+                    className="form-select"
                   >
                     <option value="">Select Question Type</option>
                     <option value="solved">Solved</option>
                     <option value="exercise">Exercise</option>
-                    <option value="external">Set of Questions</option>
-                  </Form.Control>
+                    <option value="external">External</option>
+                  </Form.Select>
                 </Form.Group>
               </Col>
             </Row>
 
-            {questionType === "external" && (
+            {questionType === 'external' && (
               <Row className="mb-3">
                 <Col xs={12} md={6}>
                   <Form.Group controlId="formQuestionLevel">
-                    <Form.Label>
-                      <FontAwesomeIcon
-                        icon={faClipboardQuestion}
-                        className="me-2"
-                      />
-                      Select The Set
+                    <Form.Label className="form-label">
+                      <FontAwesomeIcon icon={faClipboardQuestion} className="me-2" />
+                      Question Level
                     </Form.Label>
-                    <Form.Control
-                      as="select"
+                    <Form.Select
                       value={questionLevel}
                       onChange={(e) => setQuestionLevel(e.target.value)}
-                      className="form-control"
+                      className="form-select"
                     >
-                      <option value="">Select The Set</option>
-                      {subTopics.map((subTopic, index) => (
-                        <option key={subTopic} value={subTopic}>
-                          {`Exercise ${index + 1}`}
-                        </option>
-                      ))}
-                    </Form.Control>
+                      <option value="">Select Level</option>
+                      <option value="level-1">Level 1</option>
+                    </Form.Select>
                   </Form.Group>
                 </Col>
               </Row>
             )}
 
             <div className="d-flex justify-content-end">
-              <Button
-                variant="primary"
-                type="submit"
-                className="btn-generate mt-3"
-                disabled={!isGenerateButtonEnabled()}
-              >
+              <Button variant="primary" type="submit" className="generate-btn mt-3">
                 Generate Questions
               </Button>
             </div>
           </Form>
         </div>
-      </main>
+
+        {/* Recent Sessions Section */}
+        <div className="recent-sessions">
+          <h4 className="section-title">
+            <FontAwesomeIcon icon={faHistory} className="me-2" />
+            Recent Sessions
+          </h4>
+          <div className="session-cards">
+            {recentQuestionSets.map(set => (
+              <div key={set.id} className="session-card" onClick={() => setShowQuestionList(true)}>
+                <div className="session-icon">
+                  <FontAwesomeIcon icon={faBookReader} />
+                </div>
+                <div className="session-info">
+                  <h5>{set.title}</h5>
+                  <p className="session-date">{set.date}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <QuestionListModal
         show={showQuestionList}
         onHide={() => setShowQuestionList(false)}
         questionList={questionList}
         onQuestionClick={handleQuestionClick}
-        isMultipleSelect={questionType === "external"}
-        onMultipleSelectSubmit={handleMultipleSelectSubmit}
       />
     </div>
   );

@@ -1,314 +1,182 @@
-nav.custom-navbar.navbar.navbar-expand-lg.navbar-light {
-  position: sticky;
-}
-
-/* Navbar Styles */
+/* Updated Layout.css */
 .custom-navbar {
+  background: linear-gradient(to right, #0099cc, #005ca9) !important;
   color: white;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  height: 56px;
+  height: 65px; /* Increased from 56px */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0 25px; /* Increased horizontal padding */
 }
 
 .custom-navbar .navbar-brand {
-  
   color: white !important;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  font-size: 24px; /* Increased font size */
 }
 
-.custom-navbar .nav-link {
-  color: white !important;
-  padding: 0.5rem 1rem;
-  transition: all 0.3s ease;
-  font-weight: 500;
+/* Search bar */
+.search-container {
   position: relative;
-  margin: 0 5px;
-  border-radius: 5px;
-}
-
-.custom-nav-link {
-  position: relative;
-  overflow: hidden;
-}
-
-.custom-nav-link::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-  z-index: -1;
-}
-
-.custom-nav-link:hover::before {
-  left: 0;
-}
-
-.custom-nav-link.active {
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Username and Logout */
-.username-text {
-  color: white !important;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.username-text::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: white;
-  transition: width 0.3s ease;
-}
-
-.username-text:hover::after {
+  max-width: 550px; /* Increased max width */
   width: 100%;
 }
 
-.logout-icon {
-  color: white !important;
+.search-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px; /* Slightly adjusted */
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px; /* Increased size */
+}
+
+.search-input {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 25px; /* Increased radius */
+  color: white;
+  padding: 10px 20px 10px 45px; /* Increased padding */
+  width: 100%;
   transition: all 0.3s ease;
-  padding: 5px;
-  border-radius: 50%;
+  font-size: 16px; /* Increased font size */
+  height: 42px; /* Explicitly set height */
 }
 
-.logout-icon:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: rotate(90deg);
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
-/* Admin text */
-.admin-text {
-  color: white !important;
-  font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+.search-input:focus {
+  background-color: rgba(255, 255, 255, 0.25);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
-/* Spacing utilities */
-.nav-item-spacing {
-  margin-left: 20px;
+/* User section */
+.user-actions {
+  display: flex;
+  align-items: center;
 }
 
-.icon-text-spacing {
-  margin-left: 8px;
+.notification-wrapper {
+  position: relative;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.notification-bell {
+  font-size: 20px; /* Increased size */
+}
+
+.user-profile-section {
+  display: flex;
+  align-items: center;
+  margin-left: 18px; /* Slightly increased */
+}
+
+.student-badge {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 25px; /* Increased */
+  padding: 8px 18px; /* Increased padding */
+  display: flex;
+  align-items: center;
+  color: white;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: 15px; /* Increased font size */
+}
+
+.student-badge:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.user-icon {
+  font-size: 16px; /* Increased */
+}
+
+.sound-toggle {
+  cursor: pointer;
+  font-size: 20px; /* Increased */
+  transition: transform 0.2s ease;
+  margin: 0 18px; /* Increased spacing */
+}
+
+.sound-toggle:hover {
+  transform: scale(1.1);
 }
 
 /* Footer */
 .footer {
-  background: linear-gradient(135deg, #00c1d4, #001b6c);
+  background: linear-gradient(to right, #0099cc, #005ca9);
   color: white;
-  padding: 15px 20px;
+  padding: 15px 0;
   text-align: center;
-  position: fixed;
+  position: relative;
   bottom: 0;
-  left: 0;
   width: 100%;
   z-index: 1000;
-  height: 60px;
+  height: 50px;
+  font-size: 14px;
 }
 
-/* Login.css */
-.login-wrapper {
-  background: linear-gradient(135deg, #00c1d4 0%, #001b6c 100%);
+.footer p {
+  margin: 0;
 }
 
-.platform-name {
-  color: #00c1d4;
-}
-
-.platform-subtitle {
-  color: #001b6c;
-}
-
-.start-learning-btn {
-  background: linear-gradient(135deg, #00c1d4 0%, #001b6c 100%);
-}
-
-/* Analytics.css */
-.analytics-content {
-  border: 2px solid #00c1d4;
-}
-
-.chart-wrapper {
-  border: 1px solid #00c1d4;
-}
-
-/* StudentDash.css */
-.form-container {
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 193, 212, 0.1),
-    rgba(0, 27, 108, 0.05)
-  );
-  border: 1px solid #00c1d4;
-}
-
-.btn-generate {
-  background: linear-gradient(to right, #00c1d4, #001b6c) !important;
-}
-
-.question-item {
-  border: 1px solid #00c1d4;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 193, 212, 0.1),
-    rgba(0, 27, 108, 0.05)
-  );
-}
-
-/* ProgressDashboard.css */
-.progress-card {
-  border: 1px solid #00c1d4;
-}
-
-.streak-progress .progress-bar {
-  background: linear-gradient(to right, #00c1d4, #001b6c);
-}
-
-/* LeaderboardPage.css */
-.leaderboard-container {
-  background: linear-gradient(
-    45deg,
-    rgba(0, 193, 212, 0.1),
-    rgba(0, 27, 108, 0.1),
-    rgba(0, 193, 212, 0.1)
-  );
-}
-
-.rank-badge {
-  background: linear-gradient(45deg, #00c1d4, #001b6c);
-}
-
-/* QuestsPage.css */
-.quest-card {
-  border: 1px solid #00c1d4;
-  background: white;
-  transition: transform 0.3s ease;
-  margin-bottom: 20px;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 193, 212, 0.1);
-}
-
-.quest-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 193, 212, 0.2);
-}
-
-.quest-progress .progress-bar {
-  background: linear-gradient(to right, #00c1d4, #001b6c);
-}
-
-.badge-primary {
-  background: #00c1d4;
-}
-
-/* SoundConfigModal.css */
-.modal-header {
-  background: linear-gradient(to right, #00c1d4, #001b6c);
-  color: white;
-}
-
-.sound-test-button {
-  border: 1px solid #00c1d4;
-  color: #001b6c;
-}
-
-.sound-test-button:hover {
-  background: linear-gradient(to right, #00c1d4, #001b6c);
-  color: white;
-}
-
-/* Common Button Styles */
-.btn-primary {
-  background: linear-gradient(to right, #00c1d4, #001b6c) !important;
-  border: none !important;
+/* Logout icon */
+.logout-icon {
   color: white !important;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  font-size: 20px; /* Increased */
 }
 
-.btn-primary:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
+.logout-icon:hover {
+  transform: scale(1.1);
 }
 
-.btn-outline-primary {
-  border: 2px solid #00c1d4 !important;
-  color: #001b6c !important;
-  background: transparent !important;
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .search-container {
+    display: none !important;
+  }
+  
+  .student-badge {
+    padding: 5px 10px;
+  }
 }
 
-.btn-outline-primary:hover {
-  background: linear-gradient(to right, #00c1d4, #001b6c) !important;
-  color: white !important;
-}
-
-/* Notifications */
+/* Notification styling */
 .notification-badge {
-  background: #00c1d4 !important;
-}
-
-/* Progress Bars */
-.progress-bar {
-  background: linear-gradient(to right, #00c1d4, #001b6c) !important;
-}
-
-/* Form Controls */
-.form-control:focus {
-  border-color: #00c1d4;
-  box-shadow: 0 0 0 0.2rem rgba(0, 193, 212, 0.25);
-}
-
-/* Select Dropdowns */
-.select-container {
-  border-color: #00c1d4;
-}
-
-.select-container:focus-within {
-  border-color: #001b6c;
-}
-
-/* Achievement Badges */
-.achievement-badge {
-  background: linear-gradient(to right, #00c1d4, #001b6c);
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff5252 !important;
   color: white;
-  padding: 5px 10px;
-  border-radius: 4px;
+  border-radius: 50%;
+  width: 20px; /* Increased */
+  height: 20px; /* Increased */
+  font-size: 11px; /* Increased slightly */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
 }
 
-/* Level Badges */
-.level-badge {
-  background: linear-gradient(to right, #00c1d4, #001b6c);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-weight: bold;
-}
-
-/* Navigation */
-.nav-tabs .nav-link.active {
-  color: #001b6c !important;
-  border-bottom: 2px solid #00c1d4;
-}
-
-/* Cards */
-.card {
-  border: 1px solid rgba(0, 193, 212, 0.2);
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  box-shadow: 0 5px 15px rgba(0, 193, 212, 0.1);
+/* Main content area */
+main.flex-fill {
+  margin-top: 65px; /* Adjusted to match new navbar height */
+  min-height: calc(100vh - 115px); /* Adjusted calculation */
+  padding-bottom: 50px;
 }
