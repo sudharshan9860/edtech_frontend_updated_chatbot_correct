@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-import React, { useContext, useState } from 'react';
-import { Container, Navbar } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faSignOutAlt, 
-  faVolumeUp,
-  faVolumeMute,
-  faUser,
-  faSearch,
-  faBell
-=======
 import React, { useContext, useState, useEffect } from 'react';
 import { Container, Navbar, Nav } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -26,8 +13,8 @@ import {
   faBell,
   faSearch,
   faUser,
-  faQuestionCircle 
->>>>>>> 090d883cebb584be1dacb1bc0a24fade37cd88a3
+  faVolumeUp,
+  faVolumeMute
 } from '@fortawesome/free-solid-svg-icons';
 import './Layout.css';
 import { AuthContext } from './AuthContext';
@@ -38,6 +25,8 @@ import { soundManager } from '../utils/SoundManager';
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentLocation = location; // Store location for nav highlighting
   const { username, logout } = useContext(AuthContext);
   
   // Sound configuration state
@@ -66,69 +55,6 @@ const Layout = ({ children }) => {
     navigate('/');
   };
 
-<<<<<<< HEAD
-  return (
-    <div className="d-flex flex-column min-vh-100">
-      <Navbar className="custom-navbar">
-        <Container fluid>
-          <Navbar.Brand className="h3 text-white" onClick={() => navigate('/student-dash')}>
-            ORCALEX EDUCATION
-          </Navbar.Brand>
-          
-          {/* Search Bar */}
-          <div className="search-container d-none d-md-flex mx-auto">
-            <div className="search-input-wrapper">
-              <FontAwesomeIcon icon={faSearch} className="search-icon" />
-              <input 
-                type="text" 
-                placeholder="Search for lessons, quizzes..." 
-                className="search-input"
-              />
-            </div>
-          </div>
-          
-          {/* User Section */}
-          <div className="user-actions d-flex align-items-center">
-            <div className="notification-wrapper">
-              <FontAwesomeIcon icon={faBell} className="text-white notification-bell" />
-              <span className="notification-badge">3</span>
-            </div>
-            
-            <div className="user-profile-section d-flex align-items-center ms-3">
-              <div className="student-badge" onClick={() => navigate('/profile')}>
-                <FontAwesomeIcon icon={faUser} className="user-icon" />
-                <span className="ms-2 d-none d-md-inline">Student</span>
-              </div>
-            </div>
-            
-            <div 
-              className="sound-toggle mx-3"
-              onClick={() => setShowSoundConfig(true)}
-            >
-              <FontAwesomeIcon 
-                icon={isSoundEnabled ? faVolumeUp : faVolumeMute} 
-                className="text-white"
-              />
-            </div>
-            
-            <FontAwesomeIcon 
-              icon={faSignOutAlt} 
-              onClick={handleLogout}  
-              className="logout-icon text-white" 
-              style={{ cursor: 'pointer' }} 
-            />
-          </div>
-        </Container>
-      </Navbar>
-
-      <main className="flex-fill">
-        {children}
-      </main>
-
-      <footer className="footer text-center">
-        <p>&copy; ORCALEX Technologies {new Date().getFullYear()}</p>
-      </footer>
-=======
   const navigationLinks = [
     { path: '/student-dash', label: 'Student Dash' },
     { path: '/analytics', label: 'Analytics' },
@@ -152,7 +78,10 @@ const Layout = ({ children }) => {
       <header className={`top-header ${isScrolled ? 'header-shadow' : ''}`}>
         <div className="container-fluid">
           <div className="d-flex justify-content-between align-items-center">
-            <div className="brand-name animate-on-load">ORCALEX EDUCATION</div>
+            <div className="brand-name animate-on-load" onClick={() => navigate('/student-dash')} 
+                 style={{cursor: 'pointer'}}>
+              ORCALEX EDUCATION
+            </div>
             
             <div className="search-section">
               <div className="search-bar">
@@ -162,14 +91,24 @@ const Layout = ({ children }) => {
             </div>
             
             <div className="user-section">
-              <div className="notification-icon me-3">
-                <FontAwesomeIcon icon={faBell} />
+              <div 
+                className="sound-toggle-icon me-3"
+                onClick={() => setShowSoundConfig(true)}
+              >
+                <FontAwesomeIcon 
+                  icon={isSoundEnabled ? faVolumeUp : faVolumeMute} 
+                  className="text-white"
+                />
               </div>
+              <NotificationDropdown />
               <div className="user-avatar d-flex align-items-center">
                 <div className="avatar-circle me-2">
                   <FontAwesomeIcon icon={faUser} />
                 </div>
-                <span className="user-role">Student</span>
+                <span className="user-role">{username || 'Student'}</span>
+              </div>
+              <div className="logout-button ms-3" onClick={handleLogout}>
+                <FontAwesomeIcon icon={faSignOutAlt} />
               </div>
             </div>
           </div>
@@ -232,7 +171,6 @@ const Layout = ({ children }) => {
 
       {/* Fixed Footer */}
       <FixedFooter />
->>>>>>> 090d883cebb584be1dacb1bc0a24fade37cd88a3
 
       {/* Sound Configuration Modal */}
       <SoundConfigModal 

@@ -1,130 +1,3 @@
-<<<<<<< HEAD
-/* Updated Layout.css */
-.custom-navbar {
-  background: linear-gradient(to right, #0099cc, #005ca9) !important;
-  color: white;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  height: 65px; /* Increased from 56px */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 0 25px; /* Increased horizontal padding */
-}
-
-.custom-navbar .navbar-brand {
-  color: white !important;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  font-size: 24px; /* Increased font size */
-}
-
-/* Search bar */
-.search-container {
-  position: relative;
-  max-width: 550px; /* Increased max width */
-  width: 100%;
-}
-
-.search-input-wrapper {
-  position: relative;
-  width: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.search-icon {
-  position: absolute;
-  left: 18px; /* Slightly adjusted */
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 16px; /* Increased size */
-}
-
-.search-input {
-  background-color: rgba(255, 255, 255, 0.15);
-  border: none;
-  border-radius: 25px; /* Increased radius */
-  color: white;
-  padding: 10px 20px 10px 45px; /* Increased padding */
-  width: 100%;
-  transition: all 0.3s ease;
-  font-size: 16px; /* Increased font size */
-  height: 42px; /* Explicitly set height */
-}
-
-.search-input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.search-input:focus {
-  background-color: rgba(255, 255, 255, 0.25);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
-}
-
-/* User section */
-.user-actions {
-  display: flex;
-  align-items: center;
-}
-
-.notification-wrapper {
-  position: relative;
-  cursor: pointer;
-  margin-right: 5px;
-}
-
-.notification-bell {
-  font-size: 20px; /* Increased size */
-}
-
-.user-profile-section {
-  display: flex;
-  align-items: center;
-  margin-left: 18px; /* Slightly increased */
-}
-
-.student-badge {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-radius: 25px; /* Increased */
-  padding: 8px 18px; /* Increased padding */
-  display: flex;
-  align-items: center;
-  color: white;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  font-size: 15px; /* Increased font size */
-}
-
-.student-badge:hover {
-  background-color: rgba(255, 255, 255, 0.25);
-}
-
-.user-icon {
-  font-size: 16px; /* Increased */
-}
-
-.sound-toggle {
-  cursor: pointer;
-  font-size: 20px; /* Increased */
-  transition: transform 0.2s ease;
-  margin: 0 18px; /* Increased spacing */
-}
-
-.sound-toggle:hover {
-  transform: scale(1.1);
-}
-
-/* Footer */
-.footer {
-  background: linear-gradient(to right, #0099cc, #005ca9);
-  color: white;
-  padding: 15px 0;
-  text-align: center;
-  position: relative;
-=======
 /* ORCALEX Brand Colors */
 :root {
   --orcalex-light: #00c4d6;   /* Light teal */
@@ -238,18 +111,20 @@ body {
   align-items: center;
 }
 
-.notification-icon {
+.notification-icon, .sound-toggle-icon {
   font-size: 18px;
   cursor: pointer;
   transition: transform 0.2s;
+  color: white;
 }
 
-.notification-icon:hover {
+.notification-icon:hover, .sound-toggle-icon:hover, .logout-button:hover {
   transform: scale(1.1);
 }
 
 .user-avatar {
   cursor: pointer;
+  margin: 0 15px;
 }
 
 .avatar-circle {
@@ -274,9 +149,14 @@ body {
   font-weight: 500;
 }
 
+.logout-button {
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
 /* Main Navigation */
 .main-navigation {
-  background: linear-gradient(to right, #00c4d6, #1a4488) !important; /* Using ORCALEX gradient colors */
   padding: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: sticky;
@@ -311,65 +191,9 @@ body {
 .main-nav .nav-link.active::after {
   content: '';
   position: absolute;
->>>>>>> 090d883cebb584be1dacb1bc0a24fade37cd88a3
   bottom: 0;
+  left: 0;
   width: 100%;
-<<<<<<< HEAD
-  z-index: 1000;
-  height: 50px;
-  font-size: 14px;
-}
-
-.footer p {
-  margin: 0;
-}
-
-/* Logout icon */
-.logout-icon {
-  color: white !important;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  font-size: 20px; /* Increased */
-}
-
-.logout-icon:hover {
-  transform: scale(1.1);
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-  .search-container {
-    display: none !important;
-  }
-  
-  .student-badge {
-    padding: 5px 10px;
-  }
-}
-
-/* Notification styling */
-.notification-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: #ff5252 !important;
-  color: white;
-  border-radius: 50%;
-  width: 20px; /* Increased */
-  height: 20px; /* Increased */
-  font-size: 11px; /* Increased slightly */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
-/* Main content area */
-main.flex-fill {
-  margin-top: 65px; /* Adjusted to match new navbar height */
-  min-height: calc(100vh - 115px); /* Adjusted calculation */
-  padding-bottom: 50px;
-=======
   height: 3px;
   background-color: white;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); /* Slightly increased shadow for visibility */
@@ -520,6 +344,22 @@ main.flex-fill {
   animation-delay: calc(0.05s * var(--index, 0));
 }
 
+/* Notification Badge */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -591,5 +431,4 @@ main.flex-fill {
   .dashboard-container {
     padding-bottom: 80px;
   }
->>>>>>> 090d883cebb584be1dacb1bc0a24fade37cd88a3
 }
