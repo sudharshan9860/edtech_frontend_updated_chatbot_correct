@@ -62,7 +62,7 @@
 /* Study Session Card */
 .study-session-section {
   border-radius: var(--card-border-radius) !important;
-  overflow: hidden;
+  overflow: overlay;
   box-shadow: var(--card-shadow);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -179,7 +179,7 @@
 .animated-progress-bar {
   height: 8px;
   border-radius: 4px;
-  overflow: hidden;
+  overflow: overlay;
   position: relative;
 }
 
