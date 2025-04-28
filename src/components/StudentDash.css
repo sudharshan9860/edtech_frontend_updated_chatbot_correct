@@ -15,7 +15,7 @@
   color: white;
   padding: 20px 0;
   height: calc(100vh - 115px);
-  position: fixed;
+  position: relative;
   top: 65px; /* Adjusted to match new navbar height */
   left: 0;
   overflow-y: auto;
@@ -95,7 +95,7 @@
 .main-content {
   flex: 1;
   padding: 25px;
-  margin-left: 250px;
+  margin-left: 0px;
   width: calc(100% - 250px);
 }
 
